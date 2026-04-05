@@ -6,12 +6,32 @@
 </head>
 
 <body>
-    <h1 class="bg-info text-white p-3 m-0"> The Solar System </h1>
-    <%- include("./partials/nav.ejs") %> 
-
-    <h2>Random Image:</h2>
-    <img src="<%= randImg.webformatURL %>" >
-        
+    <!-- Region Search Bar -> try dropdown? -->
+    <!-- <div id="search-bar" class="input-group flex-nowrap w-50 m-5">
+        <span class="input-group-text" id="addon-wrapping">Enter Region Code:</span>
+        <input type="text" class="form-control" placeholder="Region Code" aria-label="Region Code" aria-describedby="addon-wrapping">
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="">Submit</button>
+    </div> -->
+    <h1 class="d-flex justify-content-center">BirdFindr Leaderboards:</h1>
+    <!-- Display Leaderboard -->
+    <% if (data == undefined) { %>
+        <p>No data found.</p>
+    <% } else { %>
+        <div class="container">
+            <div class="d-flex flex-wrap mb-3">
+                <% let i = 1; %>
+                <% for (const item of data) { %>
+                    <div class="card m-3 p-3 border border-0" style="width: 18rem; box-shadow: 3px 3px 6px black;">
+                        <span class="card-title">Rank #<%= i %></span>
+                        <h5 class="card-title"><b>Name:</b> <%= item.userDisplayName %></h5>
+                        <p class="card-text"><b>Species found:</b> <%= item.numSpecies %></p>
+                    </div>
+                    <% i++; %>            
+                <% } %>
+            </div>
+        </div>
+    <% } %>
+               
     <%- include("./partials/footer.ejs") %>
 </body>
 
