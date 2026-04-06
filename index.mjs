@@ -29,6 +29,7 @@ app.get('/', async (req, res) => {
       res.render('home.ejs', { data: data });
    } catch(err) {
       console.error("Error accessing API endpoint: ", err);
+      res.render('home.ejs', { data: [] });
    }
 });
 
