@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include("./partials/head.ejs") %>
+</head>
+
+<body>
+    <h1 class="d-flex justify-content-center">Generate QR Code:</h1>
+    <%- include("./partials/nav.ejs") %>
+    
+    <form method="post" action="/qr-link">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">URL:</span>
+            <input type="text" class="form-control" placeholder="URL" name="userUrl" aria-label="URL" style="max-width: fit-content;" aria-describedby="basic-addon1">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+    
+    <img src="/qr" alt="qrcode">
+
+    <%- include("./partials/footer.ejs") %>
+</body>
+
+</html>

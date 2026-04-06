@@ -1,4 +1,5 @@
 import express from 'express';
+import qr from 'qr-image';
 const app = express();
 const API_KEY = "m2feoh137j46";
 
@@ -148,6 +149,21 @@ app.get('/submit-date', async (req, res) => {
    } catch (err) {
       console.error("Error accessing API endpoint: ", err);
    }
+});
+
+app.get('/qr', (req, res) => {
+   res.render('qr.ejs');
+});
+
+app.post('/qr-link', (req, res) => {
+   let link;
+   if (req.params != (undefined || null)) {
+      link = req.body.userUrl;
+   }
+
+   let code = qr.image(link, { type: 'png' });
+   res.setHeader('Content-Type', 'image/png');
+   code.pipe(res);
 });
 
 app.listen(3000, () => {

@@ -1,0 +1,81 @@
+.hidden {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.center {
+    text-align: center;
+}
+
+.rounded {
+    border-radius: 8px;
+}
+
+.shadow {
+    box-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.opacity-half {
+    opacity: 0.5;
+}
+
+.no-select {
+    user-select: none;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.full-height {
+    height: 100%;
+}
+
+.gap {
+    gap: 1px;
+}
+
+.transition {
+    transition: all 0.3s ease;
+}
