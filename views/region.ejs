@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include("./partials/head.ejs") %>
+</head>
+
+<!-- if i have country & state && subnationalLevel = subnational2, populate dropdown with counties -->
+<body>
+    <h1 class="d-flex justify-content-center">Select Region</h1>
+    <%- include("./partials/nav.ejs") %>
+    
+    <!-- Post User Input Back to Backend -->
+    <!-- Get User Input -->
+    <!-- Render Default Select With country/world data -->
+    <form action="/region" method="post">
+        <div class="d-flex">
+            <select class="form-select" name="nation_level_select" style="max-width: fit-content;" onchange="updateSubregion1(this.value)">
+                <% for (const item of countryData) { %>
+                    <option value="<%=item.code %>"><%=item.name %></option>
+                <% } %> 
+            </select>
+        </div>
+    </form>
+    
+    <form action="/region" method="post">
+        <div class="d-flex">
+            <select class="form-select" id="subnation_select" name="subnation_level_select" style="max-width: fit-content; visibility: collapse;" onchange="submitData(this.value)">
+            </select>
+        </div>
+    </form>
+
+    <!-- Get User Input From Backend Processing & Use To Display Dropdown With Counties -->
+    
+    <%- include("./partials/footer.ejs") %>
+    <script>
+        async function updateSubregion1(e) {
+            // unhide other dropdown
+            // e is value need to pass to backend
+            // then update dropdown with api data from that pass
+            if (!e) return;
+
+            const baseUrl = "region/";
+
+            const res = await fetch(baseUrl + e, 
+            {
+                method: 'GET'
+            });
+            const data = await res.json();
+            
+            const updateSelect = document.querySelector("#subnation_select");
+            // clear current options
+            updateSelect.innerHTML = '';
+            for (const item of data) {
+                const updateOptions = document.createElement("option"); 
+                updateOptions.value = `${item.code}`;
+                updateOptions.textContent = `${item.name}`;
+                updateSelect.append(updateOptions);
+            }
+
+            document.querySelector("#subnation_select").style.visibility = 'visible';
+        }
+        
+        async function submitData(e) {
+            const baseUrl = 'submit/';
+            const res = await fetch(baseUrl + e, {
+                method: 'GET',
+            });
+        } 
+    </script>
+</body>
+
+</html>
