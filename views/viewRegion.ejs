@@ -6,8 +6,28 @@
 </head>
 
 <body>
-    <h1 class="d-flex justify-content-center">Around Me:</h1>
-
+    <h1 class="d-flex justify-content-center">Top 100 Birds Around Me:</h1>
+    <%- include("./partials/nav.ejs") %>
+    <% if (birdData == undefined) { %>
+        <p>No data found.</p>
+    <% } else { %>
+        <div class="container" id="clear_me">
+            <div class="d-flex flex-wrap mb-3">
+                <% let i = 1; %>
+                <% for (const item of birdData) { %>
+                    <% if (i > 100) break; %>
+                    <div class="card m-3 p-3 border border-0" style="width: 18rem; box-shadow: 3px 3px 6px black;">
+                        <span class="card-title">Bird #<%= i %></span>
+                        <h5 class="card-title"><b>Name:</b> <%= item.comName %></h5>
+                        <p class="card-text"><b>Number found:</b> <%= item.howMany %></p>
+                        <p class="card-text"><b>Date:</b> <%=item.obsDt%></p>
+                        <p class="card-text"><b>Found By:</b> <%=item.firstName%> <%=item.lastName%></p>
+                    </div>
+                    <% i++; %>            
+                <% } %>
+            </div>
+        </div>
+    <% } %>
                
     <%- include("./partials/footer.ejs") %>
 </body>

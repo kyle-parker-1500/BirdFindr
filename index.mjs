@@ -12,6 +12,8 @@ app.use(express.static("public"));
 // 3: /display -> displays findings in the region based on a date
 // 4: /
 
+let globalUserInput;
+
 // display top 100 sightings in US-CA (region code for ca)
 app.get('/', async (req, res) => {
    let url = `https://api.ebird.org/v2/product/top100/US-CA/2026/01/01`;
@@ -72,6 +74,7 @@ app.get('/region/:info', async (req, res) => {
 app.get('/submit/:info', async (req, res) => {
    const { info } = req.params;
    // redirects info to other routes   
+   globalUserInput = info; 
    res.redirect(`/around-me?info=${info}`);
 });
 
@@ -92,13 +95,60 @@ app.get('/around-me', async (req, res) => {
    try {
       const response = await fetch(url, settings);
       const data = await response.json();
-      console.log("Data:", data);
-      res.render('viewRegion.ejs', { data });
+      res.render('viewRegion.ejs', { birdData: data });
    } catch (err) {
       console.error("Error accessing API endpoint: ", err);
    } 
 });
 
+app.get('/recent-observations', async (req, res) => {
+   let userInput;
+   if (globalUserInput != (undefined || null)) {
+      userInput = globalUserInput;
+   }
+   let url = `https://api.ebird.org/v2/product/lists/${userInput || 'US-CA'}/2026/01/21`;
+   try {
+      const response = await fetch(url, {
+         method: 'GET',
+         headers: {
+            'X-ebirdapitoken': API_KEY
+         }
+      });
+      const data = await response.json();
+      res.render('dateView.ejs', { birdData: data });
+   } catch (err) {
+      console.error("Error accessing API endpoint: ", err);
+   }
+});
+
+app.get('/submit-date', async (req, res) => {
+   let userInput;
+   let day, year, month;
+   if (globalUserInput != (undefined || null)) {
+      userInput = globalUserInput;
+   }
+   if (req.query != (undefined || null)) {
+      day = req.query.day;
+      month = req.query.month;
+      year = req.query.year;
+   }
+   
+   let settings = {
+      method: 'GET',
+      headers: {
+         'X-ebirdapitoken': API_KEY
+      }
+   };
+   
+   let url = `https://api.ebird.org/v2/product/lists/${userInput || 'US-CA'}/${year || '2026'}/${month || '01'}/${day || '01'}`;
+   try {
+      const response = await fetch(url, settings);
+      const data = await response.json();
+      res.json(data);
+   } catch (err) {
+      console.error("Error accessing API endpoint: ", err);
+   }
+});
 
 app.listen(3000, () => {
    console.log('server started');

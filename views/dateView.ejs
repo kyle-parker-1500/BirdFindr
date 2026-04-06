@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include("./partials/head.ejs") %>
+</head>
+
+<body>
+    <h1 class="d-flex justify-content-center">Birds Seen On:</h1>
+    <%- include("./partials/nav.ejs") %>
+    
+    <form action="/submit-date" method="post">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Date:</span>
+            <input type="text" class="form-control" placeholder="Day (DD)" name="dateDay" aria-label="Day" style="max-width: fit-content;" aria-describedby="basic-addon1">
+            <span class="input-group-text" id="basic-addon2">/</span>
+            <input type="text" class="form-control" placeholder="Month (MM)" name="dateMonth" aria-label="Month" style="max-width: fit-content;" aria-describedby="basic-addon2">
+            <span class="input-group-text" id="basic-addon3">/</span>
+            <input type="text" class="form-control" placeholder="Year (YYYY)" name="dateYear" aria-label="Year" style="max-width: fit-content;" aria-describedby="basic-addon3">
+            <button type="button" class="btn btn-primary" onclick="submitData()">Submit</button>
+        </div>
+    </form>
+
+    <% if (birdData == undefined) { %>
+        <p>No data found.</p>
+    <% } else { %>
+        <div class="container" id="clear_me">
+            <div class="d-flex flex-wrap mb-3">
+                <% let i = 1; %>
+                <% for (const item of birdData) { %>
+                    <% if (i > 100) break; %>
+                    <div class="card m-3 p-3 border border-0" style="width: 18rem; box-shadow: 3px 3px 6px black;">
+                        <span class="card-title">Bird #<%= i %></span>
+                        <p class="card-text"><b>Number found:</b> <%= item.numSpecies %></p>
+                        <p class="card-text"><b>Date:</b> <%=item.obsDt%></p>
+                        <p class="card-text"><b>Found By:</b> <%=item.userDisplayName %></p>
+                    </div>
+                    <% i++; %>            
+                <% } %>
+            </div>
+        </div>
+    <% } %>
+               
+    <%- include("./partials/footer.ejs") %>
+    <script>
+    async function submitData() {
+        const day = document.querySelector('[name="dateDay"]');
+        const month = document.querySelector('[name="dateMonth"]');
+        const year = document.querySelector('[name="dateYear"]');
+        
+        let date = {
+            'day': day.value,
+            'month': month.value,
+            'year': year.value,
+        };
+        
+        const response = await fetch(`submit-date?day=${date.day}&month=${date.month}&year=${date.year}`, {
+            method: 'GET',
+        });
+        const data = await response.json();
+        console.log(data);
+
+        const clear_me = document.querySelector("#clear_me");
+        clear_me.className = "container";
+        clear_me.innerHTML = '';
+        
+        // update w/ new data
+        const wrapper = document.createElement("div");
+        wrapper.className = "d-flex flex-wrap mb-3";
+        let i = 1;
+        for (const item of data) {
+            const card = document.createElement("div");            
+            card.className = "card m-3 p-3 border border-0";
+            card.style = "width: 18rem; box-shadow: 3px 3px 6px black;";
+
+            const title = document.createElement("span");
+            title.className = "card-title";
+            title.textContent = `Bird #: ${i}`;
+            
+            card.append(title);
+            
+            const name = document.createElement("h5");
+            name.className = "card-title";
+            name.innerHTML = `<b>Name:</b> ${item.userDisplayName}`;
+            
+            card.append(name);
+
+            const number = document.createElement("p"); 
+            number.className = "card-text";
+            number.innerHTML = `<b>Number found:</b> ${item.numSpecies}`; 
+            
+            card.append(number);
+            
+            const dateFound = document.createElement("p");
+            dateFound.className = "card-text";
+            dateFound.innerHTML = `<b>Date:</b> ${item.obsDt}`;
+            
+            card.append(dateFound);
+
+            const locationFound = document.createElement("p");
+            locationFound.className = "card-text"; 
+            locationFound.innerHTML = `<b>Location:</b> ${item.loc.hierarchicalName}`;
+            
+            card.append(locationFound);
+            
+            wrapper.append(card);
+            
+            i++;
+        }
+        clear_me.append(wrapper);
+    }
+    </script>
+</body>
+
+</html>
